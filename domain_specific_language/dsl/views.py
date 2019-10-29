@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from rest_framework.decorators import api_view
+from.serializers import *
 
-# Create your views here.
+
+@api_view(['POST'])
+def dsl_view(request):
+	
+	data = request.data
+	serializer = DslSerializer(data)
+	return Response(serializer.create_sql_query())
