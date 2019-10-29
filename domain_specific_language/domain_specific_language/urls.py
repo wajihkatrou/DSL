@@ -12,6 +12,6 @@ router.register(r'', CityViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'towns/', include(router.urls)),
+    url(r'cities/', include(router.urls)),
     path('sql/', dsl_view, name='dsl-view'),
 ]

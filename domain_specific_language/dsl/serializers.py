@@ -7,14 +7,19 @@ class DslSerializer(serializers.Serializer):
 	fields = serializers.ListField(child=serializers.CharField())
 	filters = serializers.JSONField(required=False)
 
+
 	def create_sql_query(self):
+		#Get the valid fields in the table schema
 		citySerializer = CitySerializer()
 		valide_keys = list(citySerializer.fields.keys())
+		
+		#Dictionnary to use when we transform predicate filters
 		replace_with = {"eq" : "=", "gt" : ">", "lt" : "<", "contains" : "in"}
+		
 		sql_query = "SELECT "
 		
 		query = self.data
-
+		
 		for field in query["fields"]:
 			if field in valide_keys:
 				sql_query += field + ", "

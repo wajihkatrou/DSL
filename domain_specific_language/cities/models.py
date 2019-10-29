@@ -1,6 +1,8 @@
 from django.db import models
 
 
+#To prevent redundancy when filling the table, we split the schema into two models and we add foreign key link between them
+
 class City(models.Model):
 
 	code = models.IntegerField()

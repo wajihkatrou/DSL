@@ -3,6 +3,7 @@ from .models import *
 
 class CitySerializer(serializers.HyperlinkedModelSerializer):
 
+	#Get the foreign key value
 	reg_name = serializers.CharField(source='region.region_name')
 	reg_code = serializers.IntegerField(source='region.region_code')
 
