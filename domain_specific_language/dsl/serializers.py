@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from cities.serializers import *
-
+import json
 
 class DslSerializer(serializers.Serializer):
 		
@@ -10,7 +10,7 @@ class DslSerializer(serializers.Serializer):
 	def create_sql_query(self):
 		citySerializer = CitySerializer()
 		valide_keys = list(citySerializer.fields.keys())
-		
+		replace_with = {"eq" : "=", "gt" : ">", "lt" : "<", "contains" : "in"}
 		sql_query = "SELECT "
 		
 		query = self.data
@@ -21,6 +21,16 @@ class DslSerializer(serializers.Serializer):
 			else:	
 				return f"The key {field} is not in table schema! Please enter a valid JSON"
 		
-		sql_query = sql_query[:-2] + " FROM city;"
+		sql_query = sql_query[:-2] + " FROM city"
 
-		return sql_query
+		if "filters" in query:
+			filters = query["filters"]
+			if filters['field'] not in valide_keys:
+				return f"The filter field {filters['field']} is not in table schema!"
+			if "predicate" in filters:
+				replace = filters['predicate'].replace(filters['predicate'], replace_with[filters['predicate']])
+				sql_query += f" WHERE {filters['field']} {replace} {filters['value']}"
+			else:
+				sql_query += f" WHERE {filters['field']} {replace_with['eq']} {filters['value']}"
+		
+		return sql_query + ";"
